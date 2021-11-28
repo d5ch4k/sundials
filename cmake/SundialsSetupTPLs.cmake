@@ -140,6 +140,15 @@ if(ENABLE_SUPERLUMT)
   list(APPEND SUNDIALS_TPL_LIST "SUPERLUMT")
 endif()
 
+# ---------------------------------------------------------------
+# Find (and test) the SUPERLU libraries
+# ---------------------------------------------------------------
+
+if(ENABLE_SUPERLU)
+  include(SundialsSuperLU)
+  list(APPEND SUNDIALS_TPL_LIST "SUPERLU")
+endif()
+
 # -------------------------------------------------------------
 # Find (and test) Trilinos
 # -------------------------------------------------------------
