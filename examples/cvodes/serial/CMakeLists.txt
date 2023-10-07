@@ -74,6 +74,13 @@ set(CVODES_examples_SUPERLUMT
   "cvsRoberts_sps\;\;develop"
   )
 
+# Examples using SuperLU linear solver
+set(CVODES_examples_SUPERLU_SERIAL
+  "cvsRoberts_ASAi_sps_serial\;\;develop"
+  "cvsRoberts_FSA_sps_serial\;-sensi stg1 t\;develop"
+  "cvsRoberts_sps_serial\;\;develop"
+  )
+
 # Auxiliary files to install
 set(CVODES_extras
   plot_cvsParticle.py
@@ -319,6 +326,69 @@ if(BUILD_SUNLINSOL_SUPERLUMT)
 endif()
 
 
+# Add the build and install targets for each SuperLU example (if needed)
+if(BUILD_SUNLINSOL_SUPERLU_SERIAL)
+
+  # Sundials SuperLU linear solver module
+  set(SUNLINSOLSLU_SERIAL_LIBS sundials_sunlinsolsuperlu_serial)
+
+  # SuperLU libraries
+  list(APPEND SUNLINSOLSLU_SERIAL_LIBS ${SUPERLU_SERIAL_LIBRARIES})
+
+  foreach(example_tuple ${CVODES_examples_SUPERLU_SERIAL})
+
+    # parse the example tuple
+    list(GET example_tuple 0 example)
+    list(GET example_tuple 1 example_args)
+    list(GET example_tuple 2 example_type)
+
+    # check if this example has already been added, only need to add
+    # example source files once for testing with different inputs
+    if(NOT TARGET ${example})
+      # add example source files
+      add_executable(${example} ${example}.c)
+
+      # folder to organize targets in an IDE
+      set_target_properties(${example} PROPERTIES FOLDER "Examples")
+
+      # libraries to link against
+      target_link_libraries(${example} ${SUNDIALS_LIBS} ${SUNLINSOLSLU_SERIAL_LIBS})
+    endif()
+
+    # check if example args are provided and set the test name
+    if("${example_args}" STREQUAL "")
+      set(test_name ${example})
+    else()
+      string(REGEX REPLACE " " "_" test_name ${example}_${example_args})
+    endif()
+
+    # Do not include SuperLU examples in testing when the indextype is int32_t.
+    # Answer files were generated with int64_t and minor differences in output
+    # occur causing a false positive when testing. These tests can be re-enabled
+    # when type specific answer files are added.
+    if(SUNDIALS_INDEX_SIZE MATCHES "32")
+      # add example to regression tests
+      sundials_add_test(${test_name} ${example}
+        TEST_ARGS ${example_args}
+        ANSWER_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+        ANSWER_FILE ${test_name}.out
+        EXAMPLE_TYPE ${example_type})
+    endif()
+
+    # find all .out files for this example
+    file(GLOB example_out ${example}*.out)
+
+    # install example source and .out files
+    if(EXAMPLES_INSTALL)
+      install(FILES ${example}.c ${example_out}
+        DESTINATION ${EXAMPLES_INSTALL_PATH}/cvodes/serial)
+    endif()
+
+  endforeach(example_tuple ${CVODES_examples_SUPERLU_SERIAL})
+
+endif()
+
+
 # create Makfile and CMakeLists.txt for examples
 if(EXAMPLES_INSTALL)
 
@@ -358,6 +428,12 @@ if(EXAMPLES_INSTALL)
   else()
     set(EXAMPLES_SLUMT "")
     set(THREAD_LIBRARY_SLUMT "")
+  endif()
+
+  if(BUILD_SUNLINSOL_SUPERLU_SERIAL)
+    examples2string(CVODES_examples_SUPERLU_SERIAL EXAMPLES_SLU_SERIAL)
+  else()
+    set(EXAMPLES_SLU_SERIAL "")
   endif()
 
   # Regardless of the platform we're on, we will generate and install
