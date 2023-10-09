@@ -366,3 +366,9 @@ sundials_option(KokkosKernels_DIR PATH "Path to the root of a Kokkos Kernels ins
 sundials_option(KOKKOS_KERNELS_WORKS BOOL "Set to ON to force CMake to accept a given Kokkos configuration" OFF
                 DEPENDS_ON ENABLE_KOKKOS ENABLE_KOKKOS_KERNELS
                 ADVANCED)
+
+# ---------------------------------------------------------------
+# Enable Eigen Sparse Linear Solver support?
+# ---------------------------------------------------------------
+
+sundials_option(ENABLE_EIGEN_SPARSE_LINEAR_SOLVER BOOL "Enable Eigen Sparse Linear Solver support" ON)

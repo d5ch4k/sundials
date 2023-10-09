@@ -89,3 +89,7 @@ endif()
 if(BUILD_SUNLINSOL_SUPERLU_SERIAL)
   add_subdirectory(superlu_serial)
 endif()
+
+if(BUILD_SUNLINSOL_EIGENSPARSE)
+  add_subdirectory(eigen_sparse)
+endif()

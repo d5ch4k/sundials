@@ -54,9 +54,16 @@ set(KINSOL_examples_SUPERLUMT
 
 # Examples using SuperLU serial linear solver
 set(KINSOL_examples_SUPERLU_SERIAL
-  "kinRoboKin_slu_serial\;develop"
-  "kinFerTron_slu_serial\;develop"
-  )
+        "kinRoboKin_slu_serial\;c\;develop"
+        "kinRoboKin_slu_serial_cpp\;cpp\;develop"
+        "kinFerTron_slu_serial\;c\;develop"
+)
+
+# Examples using Eigen Sparse serial linear solver
+set(KINSOL_examples_EIGENSPARSE
+        "kinRoboKin_eigen_sparse\;cpp\;develop"
+        "kinRoboKin_more_eigen_sparse\;cpp\;develop"
+)
 
 # Auxiliary files to install
 set(KINSOL_extras
@@ -254,11 +261,21 @@ if(BUILD_SUNLINSOL_SUPERLU_SERIAL)
 
     # parse the example tuple
     list(GET example_tuple 0 example)
-    list(GET example_tuple 1 example_type)
+    list(GET example_tuple 1 c_or_cpp)
+    list(GET example_tuple 2 example_type)
 
     # example source files
-    add_executable(${example} ${example}.c)
+    add_executable(${example} ${example}.${c_or_cpp})
+#    if(${example} MATCHES "_cpp$")
+#        add_executable(${example} ${example}.cpp)
+#    else()
+#        add_executable(${example} ${example}.c)
+#    endif ()
 
+    if(${c_or_cpp} STREQUAL "cpp")
+        set_target_properties(${example} PROPERTIES LINKER_LANGUAGE CXX)
+        target_include_directories(${example} PUBLIC /opt/local/include/eigen3)
+    endif ()
     set_target_properties(${example} PROPERTIES FOLDER "Examples")
 
     # add example to regression tests
@@ -268,16 +285,65 @@ if(BUILD_SUNLINSOL_SUPERLU_SERIAL)
       EXAMPLE_TYPE ${example_type})
 
     # libraries to link against
-    target_link_libraries(${example} ${SUNDIALS_LIBS} ${SUNLINSOLSLU_SERIAL_LIBS})
+    target_link_libraries(${example} ${SUNDIALS_LIBS} ${SUNLINSOLSLU_SERIAL_LIBS} sundials_sunmatrix_eigensparse)
     target_link_directories(${example} PUBLIC ${SUPERLU_SERIAL_LIBRARY_DIR})
 
     # install example source and out files
     if(EXAMPLES_INSTALL)
-      install(FILES ${example}.c ${example}.out
-        DESTINATION ${EXAMPLES_INSTALL_PATH}/kinsol/serial)
+        install(FILES ${example}.${c_or_cpp} ${example}.out
+                DESTINATION ${EXAMPLES_INSTALL_PATH}/kinsol/serial)
     endif()
 
   endforeach(example_tuple ${KINSOL_examples_SUPERLU_SERIAL})
+
+endif()
+
+# Add the build and install targets for each SuperLU serial example (if needed)
+if(BUILD_SUNLINSOL_EIGENSPARSE)
+
+    # Sundials Eigen Sparse serial linear solver module
+    set(SUNLINSOL_EIGENSPARSE_LIBS sundials_sunlinsol_eigen_sparse)
+
+    # Eigen Sparse serial libraries
+    list(APPEND SUNLINSOL_EIGENSPARSE_LIBS ${EIGENSPARSE_LIBRARIES})
+
+    foreach(example_tuple ${KINSOL_examples_EIGENSPARSE})
+
+        # parse the example tuple
+        list(GET example_tuple 0 example)
+        list(GET example_tuple 1 c_or_cpp)
+        list(GET example_tuple 2 example_type)
+
+        # example source files
+        add_executable(${example} ${example}.${c_or_cpp})
+        #    if(${example} MATCHES "_cpp$")
+        #        add_executable(${example} ${example}.cpp)
+        #    else()
+        #        add_executable(${example} ${example}.c)
+        #    endif ()
+
+        if(${c_or_cpp} STREQUAL "cpp")
+            set_target_properties(${example} PROPERTIES LINKER_LANGUAGE CXX)
+        endif ()
+        set_target_properties(${example} PROPERTIES FOLDER "Examples")
+
+        # add example to regression tests
+        sundials_add_test(${example} ${example}
+                ANSWER_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+                ANSWER_FILE ${example}.out
+                EXAMPLE_TYPE ${example_type})
+
+        # libraries to link against
+        target_link_libraries(${example} ${SUNDIALS_LIBS} ${SUNLINSOL_EIGENSPARSE_LIBS})
+        target_link_directories(${example} PUBLIC ${EIGENSPARSE_LIBRARY_DIR})
+
+        # install example source and out files
+        if(EXAMPLES_INSTALL)
+            install(FILES ${example}.${c_or_cpp} ${example}.out
+                    DESTINATION ${EXAMPLES_INSTALL_PATH}/kinsol/serial)
+        endif()
+
+    endforeach(example_tuple ${KINSOL_examples_EIGENSPARSE})
 
 endif()
 
@@ -326,6 +392,11 @@ if(EXAMPLES_INSTALL)
     examples2string(KINSOL_examples_SUPERLU_SERIAL EXAMPLES_SLU_SERIAL)
   else()
     set(EXAMPLES_SLU_SERIAL "")
+  endif()
+  if(BUILD_SUNLINSOL_EIGENSPARSE)
+      examples2string(KINSOL_examples_EIGENSPARSE EXAMPLES_EIGENSPARSE)
+  else()
+      set(EXAMPLES_EIGENSPARSE "")
   endif()
 
   # Regardless of the platform we're on, we will generate and install
