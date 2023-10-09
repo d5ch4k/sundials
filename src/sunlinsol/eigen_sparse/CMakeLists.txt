@@ -11,31 +11,33 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # SUNDIALS Copyright End
 # ---------------------------------------------------------------
-# CMakeLists.txt file for the superlu_serial SUNLinearSolver library
+# CMakeLists.txt file for the eigen_sparse SUNLinearSolver library
 # ---------------------------------------------------------------
 
-install(CODE "MESSAGE(\"\nInstall SUNLINSOL_SUPERLU_SERIAL\n\")")
+install(CODE "MESSAGE(\"\nInstall SUNLINSOL_EIGEN_SPARSE\n\")")
 
 # Add the library
-sundials_add_library(sundials_sunlinsolsuperlu_serial
+sundials_add_library(sundials_sunlinsol_eigen_sparse
   SOURCES
-        sunlinsol_superlu_serial.c
+        sunlinsol_eigen_sparse.cpp
   HEADERS
-    ${SUNDIALS_SOURCE_DIR}/include/sunlinsol/sunlinsol_superlu_serial.h
+    ${SUNDIALS_SOURCE_DIR}/include/sunlinsol/sunlinsol_eigen_sparse.h
   INCLUDE_SUBDIR
     sunlinsol
+  INCLUDE_DIRECTORIES
+    PUBLIC
+    ${EIGEN_INCLUDE_DIR}
   OBJECT_LIBRARIES
     sundials_generic_obj
   LINK_LIBRARIES
     PUBLIC
     sundials_sunmatrixsparse
-    SUNDIALS::SUPERLU_SERIAL
   OUTPUT_NAME
-    sundials_sunlinsolsuperlu_serial
+        sunlinsol_eigen_sparse
   VERSION
     ${sunlinsollib_VERSION}
   SOVERSION
     ${sunlinsollib_VERSION}
 )
 
-message(STATUS "Added SUNLINSOL_SUPERLU module")
+message(STATUS "Added SUNLINSOL_EIGEN_SPARSE module")
