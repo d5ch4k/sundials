@@ -229,6 +229,11 @@ sundials_option(BUILD_SUNLINSOL_SUPERLUMT BOOL "Build the SUNLINSOL_SUPERLUMT mo
                 ADVANCED)
 list(APPEND SUNDIALS_BUILD_LIST "BUILD_SUNLINSOL_SUPERLUMT")
 
+sundials_option(BUILD_SUNLINSOL_SUPERLU_SERIAL BOOL "Build the SUNLINSOL_SUPERLU_SERIAL module (requires SUPERLU_SERIAL)" ON
+                DEPENDS_ON ENABLE_SUPERLU_SERIAL SUPERLU_SERIAL_WORKS
+                ADVANCED)
+list(APPEND SUNDIALS_BUILD_LIST "BUILD_SUNLINSOL_SUPERLU_SERIAL")
+
 
 # ---------------------------------------------------------------
 # Options to enable/disable build for SUNNONLINSOL modules.

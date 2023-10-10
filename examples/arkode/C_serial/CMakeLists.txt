@@ -98,6 +98,11 @@ set(ARKODE_examples_SUPERLUMT
   "ark_brusselator1D_FEM_slu\;exclude-single"
   )
 
+# Examples using SuperLU linear solver
+set(ARKODE_examples_SUPERLU_SERIAL
+  "ark_brusselator1D_FEM_slu_serial\;develop"
+  )
+
 # Auxiliary files to install
 set(ARKODE_extras
   ark_analytic_nonlin_stats.csv
@@ -237,6 +242,51 @@ if(BUILD_SUNLINSOL_SUPERLUMT)
 endif()
 
 
+# Add the build and install targets for each SuperLU serial example (if needed)
+if(BUILD_SUNLINSOL_SUPERLU_SERIAL)
+
+  # Sundials SuperLU linear solver module
+  set(SUNLINSOLSLU_SERIAL_LIBS sundials_sunlinsolsuperlu_serial)
+
+  # SuperLU libraries
+  list(APPEND SUNLINSOLSLU_SERIAL_LIBS ${SUPERLU_SERIAL_LIBRARIES})
+
+  foreach(example_tuple ${ARKODE_examples_SUPERLU_SERIAL})
+
+      # parse the example tuple
+      list(GET example_tuple 0 example)
+      list(GET example_tuple 1 example_type)
+
+      # example source files
+      add_executable(${example} ${example}.c)
+
+      set_target_properties(${example} PROPERTIES FOLDER "Examples")
+
+      # add example to regression tests
+      sundials_add_test(${example} ${example}
+              ANSWER_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+              ANSWER_FILE ${example}.out
+              EXAMPLE_TYPE ${example_type})
+
+      # libraries to link against
+      target_link_libraries(${example}
+              sundials_arkode
+              sundials_nvecserial
+              sundials_sunlinsolsuperlu_serial
+              ${EXE_EXTRA_LINK_LIBS})
+      target_link_directories(${example} PUBLIC ${SUPERLU_SERIAL_LIBRARY_DIR})
+
+      # install example source and out files
+      if(EXAMPLES_INSTALL)
+          install(FILES ${example}.c ${example}.out
+                  DESTINATION ${EXAMPLES_INSTALL_PATH}/arkode/C_serial)
+      endif()
+
+  endforeach(example_tuple ${ARKODE_examples_SUPERLU_SERIAL})
+
+endif()
+
+
 # create Makfile and CMakeLists.txt for examples
 if(EXAMPLES_INSTALL)
 
@@ -270,6 +320,12 @@ if(EXAMPLES_INSTALL)
   else()
     set(EXAMPLES_SLUMT "")
     set(THREAD_LIBRARY_SLUMT "")
+  endif()
+
+  if(BUILD_SUNLINSOL_SUPERLU_SERIAL)
+    examples2string(ARKODE_examples_SUPERLU_SERIAL EXAMPLES_SLU_SERIAL)
+  else()
+    set(EXAMPLES_SLU_SERIAL "")
   endif()
 
   # Regardless of the platform we're on, we will generate and install

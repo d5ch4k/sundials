@@ -113,6 +113,13 @@ if(DEFINED SUPERLUMT_ENABLE)
   unset(SUPERLUMT_ENABLE CACHE)
 endif()
 
+if(DEFINED SUPERLU_SERIAL_ENABLE)
+  print_warning("The CMake option SUPERLU_SERIAL_ENABLE is deprecated" "Use ENABLE_SUPERLU_SERIAL instead"
+                MODE DEPRECATION)
+  set(ENABLE_SUPERLU_SERIAL ${SUPERLU_SERIAL_ENABLE} CACHE BOOL "Enable SuperLU serial support" FORCE)
+  unset(SUPERLU_SERIAL_ENABLE CACHE)
+endif()
+
 if(DEFINED KLU_ENABLE)
   print_warning("The CMake option KLU_ENABLE is deprecated" "Use ENABLE_KLU instead"
                 MODE DEPRECATION)

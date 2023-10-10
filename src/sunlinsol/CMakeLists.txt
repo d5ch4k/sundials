@@ -85,3 +85,7 @@ endif()
 if(BUILD_SUNLINSOL_SUPERLUMT)
   add_subdirectory(superlumt)
 endif()
+
+if(BUILD_SUNLINSOL_SUPERLU_SERIAL)
+  add_subdirectory(superlu_serial)
+endif()

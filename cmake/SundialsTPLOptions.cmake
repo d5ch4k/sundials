@@ -154,6 +154,24 @@ sundials_option(SUPERLUMT_WORKS BOOL "Set to ON to force CMake to accept a given
                 ADVANCED)
 
 # ---------------------------------------------------------------
+# Enable SuperLU serial support?
+# ---------------------------------------------------------------
+sundials_option(ENABLE_SUPERLU_SERIAL BOOL "Enable SuperLU serial support" OFF)
+
+sundials_option(SUPERLU_SERIAL_INCLUDE_DIR PATH "SuperLU serial include directory" "${SUPERLU_SERIAL_INCLUDE_DIR}"
+                SHOW_IF ENABLE_SUPERLU_SERIAL)
+
+sundials_option(SUPERLU_SERIAL_LIBRARY_DIR PATH "SuperLU serial library directory" "${SUPERLU_SERIAL_LIBRARY_DIR}"
+                SHOW_IF ENABLE_SUPERLU_SERIAL)
+
+sundials_option(SUPERLU_SERIAL_LIBRARIES STRING "Semi-colon separated list of additional libraries needed for SuperLU serial." "${SUPERLU_SERIAL_LIBRARIES}"
+                SHOW_IF ENABLE_SUPERLU_SERIAL)
+
+sundials_option(SUPERLU_SERIAL_WORKS BOOL "Set to ON to force CMake to accept a given SuperLU serial configuration" OFF
+                SHOW_IF ENABLE_SUPERLU_SERIAL
+                ADVANCED)
+
+# ---------------------------------------------------------------
 # Enable KLU support?
 # ---------------------------------------------------------------
 sundials_option(ENABLE_KLU BOOL "Enable KLU support" OFF)
