@@ -67,7 +67,8 @@ typedef enum
   SUNMATRIX_CUSPARSE,
   SUNMATRIX_GINKGO,
   SUNMATRIX_KOKKOSDENSE,
-  SUNMATRIX_CUSTOM
+  SUNMATRIX_CUSTOM,
+  SUNMATRIX_EIGENSPARSE,
 } SUNMatrix_ID;
 
 /* -----------------------------------------------------------------

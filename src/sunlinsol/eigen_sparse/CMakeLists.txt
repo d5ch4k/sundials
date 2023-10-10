@@ -14,7 +14,7 @@
 # CMakeLists.txt file for the eigen_sparse SUNLinearSolver library
 # ---------------------------------------------------------------
 
-install(CODE "MESSAGE(\"\nInstall SUNLINSOL_EIGEN_SPARSE\n\")")
+install(CODE "MESSAGE(\"\nInstall SUNLINSOL_EIGENSPARSE\n\")")
 
 # Add the library
 sundials_add_library(sundials_sunlinsol_eigen_sparse
@@ -40,4 +40,4 @@ sundials_add_library(sundials_sunlinsol_eigen_sparse
     ${sunlinsollib_VERSION}
 )
 
-message(STATUS "Added SUNLINSOL_EIGEN_SPARSE module")
+message(STATUS "Added SUNLINSOL_EIGENSPARSE module")

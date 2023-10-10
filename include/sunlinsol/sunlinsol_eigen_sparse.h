@@ -14,8 +14,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * SUNDIALS Copyright End
  * -----------------------------------------------------------------
- * This is the header file for the SUNLINSOL_EIGEN_SPARSE implementation of the
- * SUNLINSOL module, SUNLINSOL_EIGEN_SPARSE.
+ * This is the header file for the SUNLINSOL_EIGENSPARSE implementation of the
+ * SUNLINSOL module, SUNLINSOL_EIGENSPARSE.
  *
  * Note:
  *   - The definition of the generic SUNLinearSolver structure can
@@ -29,7 +29,7 @@
 #include <sundials/sundials_linearsolver.h>
 #include <sundials/sundials_matrix.h>
 #include <sundials/sundials_nvector.h>
-#include <sunmatrix/sunmatrix_sparse.h>
+//#include <sunmatrix/sunmatrix_sparse.h>
 #include <Eigen/Sparse>
 #include <Eigen/Dense>
 
@@ -57,7 +57,7 @@ typedef struct _SUNLinearSolverContent_EigenSparse *SUNLinearSolverContent_Eigen
 
 
 /* -------------------------------------------
- * Exported Functions for SUNLINSOL_EIGEN_SPARSE
+ * Exported Functions for SUNLINSOL_EIGENSPARSE
  * ------------------------------------------- */
 
 SUNDIALS_EXPORT SUNLinearSolver SUNLinSol_EigenSparse(N_Vector y, SUNMatrix A, SUNContext sunctx);

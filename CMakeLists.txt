@@ -139,6 +139,22 @@ set(_SHARED_LIB_SUFFIX
 set(_SUNDIALS_ALIAS_TARGETS ""
     CACHE INTERNAL "" FORCE)
 
+
+
+set(BUILD_SUNLINSOL_SUPERLU_SERIAL ON)
+set(ENABLE_SUPERLU_SERIAL ON)
+#set(SUPERLU_SERIAL_LIBRARIES blas)
+set(SUPERLU_SERIAL_WORKS TRUE)
+set(SUPERLU_SERIAL_INCLUDE_DIR /Users/mp0518/Develop/superlu/SRC)
+set(SUPERLU_SERIAL_LIBRARY_DIR /Users/mp0518/Develop/superlu/SRC)
+set(BUILD_SHARED_LIBS FALSE)
+set(BUILD_STATIC_LIBS TRUE)
+include(SundialsSetupCXX)
+set(ENABLE_EIGENSPARSE ON)
+set(BUILD_SUNLINSOL_EIGENSPARSE TRUE)
+set(EIGEN_INCLUDE_DIR /opt/local/include/eigen3)
+set(BUILD_SUNMATRIX_EIGENSPARSE TRUE)
+
 # ===============================================================
 # Build options to be processed first
 # ===============================================================

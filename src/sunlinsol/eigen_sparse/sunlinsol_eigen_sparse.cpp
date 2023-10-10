@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * SUNDIALS Copyright End
  * -----------------------------------------------------------------
- * This is the implementation file for the SUNLINSOL_EIGEN_SPARSE serial implementation
+ * This is the implementation file for the SUNLINSOL_EIGENSPARSE serial implementation
  * of the SUNLINSOL package.
  * -----------------------------------------------------------------*/
 
@@ -30,7 +30,7 @@
 
 /*
  * -----------------------------------------------------------------
- * SUNLINSOL_EIGEN_SPARSE solver structure accessibility macros:
+ * SUNLINSOL_EIGENSPARSE solver structure accessibility macros:
  * -----------------------------------------------------------------
  */
 
@@ -50,7 +50,7 @@
  */
 
 /* ----------------------------------------------------------------------------
- * Function to create a new SUNLINSOL_EIGEN_SPARSE linear solver
+ * Function to create a new SUNLINSOL_EIGENSPARSE linear solver
  */
 
 SUNLinearSolver SUNLinSol_EigenSparse(N_Vector y, SUNMatrix A, SUNContext sunctx)
@@ -119,7 +119,7 @@ SUNLinearSolver SUNLinSol_EigenSparse(N_Vector y, SUNMatrix A, SUNContext sunctx
 
 SUNLinearSolver_Type SUNLinSolGetType_EigenSparse(SUNLinearSolver S) { return (SUNLINEARSOLVER_DIRECT); }
 
-SUNLinearSolver_ID SUNLinSolGetID_EigenSparse(SUNLinearSolver S) { return (SUNLINEARSOLVER_EIGEN_SPARSE); }
+SUNLinearSolver_ID SUNLinSolGetID_EigenSparse(SUNLinearSolver S) { return (SUNLINEARSOLVER_EIGENSPARSE); }
 
 int SUNLinSolInitialize_EigenSparse(SUNLinearSolver S)
 {

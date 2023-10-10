@@ -60,8 +60,9 @@ set(KINSOL_examples_SUPERLU_SERIAL
 )
 
 # Examples using Eigen Sparse serial linear solver
-set(KINSOL_examples_EIGEN_SPARSE
+set(KINSOL_examples_EIGENSPARSE
         "kinRoboKin_eigen_sparse\;cpp\;develop"
+        "kinRoboKin_more_eigen_sparse\;cpp\;develop"
 )
 
 # Auxiliary files to install
@@ -284,7 +285,7 @@ if(BUILD_SUNLINSOL_SUPERLU_SERIAL)
       EXAMPLE_TYPE ${example_type})
 
     # libraries to link against
-    target_link_libraries(${example} ${SUNDIALS_LIBS} ${SUNLINSOLSLU_SERIAL_LIBS})
+    target_link_libraries(${example} ${SUNDIALS_LIBS} ${SUNLINSOLSLU_SERIAL_LIBS} sundials_sunmatrix_eigensparse)
     target_link_directories(${example} PUBLIC ${SUPERLU_SERIAL_LIBRARY_DIR})
 
     # install example source and out files
@@ -298,15 +299,15 @@ if(BUILD_SUNLINSOL_SUPERLU_SERIAL)
 endif()
 
 # Add the build and install targets for each SuperLU serial example (if needed)
-if(BUILD_SUNLINSOL_EIGEN_SPARSE)
+if(BUILD_SUNLINSOL_EIGENSPARSE)
 
     # Sundials Eigen Sparse serial linear solver module
-    set(SUNLINSOL_EIGEN_SPARSE_LIBS sundials_sunlinsol_eigen_sparse)
+    set(SUNLINSOL_EIGENSPARSE_LIBS sundials_sunlinsol_eigen_sparse)
 
     # Eigen Sparse serial libraries
-    list(APPEND SUNLINSOL_EIGEN_SPARSE_LIBS ${EIGEN_SPARSE_LIBRARIES})
+    list(APPEND SUNLINSOL_EIGENSPARSE_LIBS ${EIGENSPARSE_LIBRARIES})
 
-    foreach(example_tuple ${KINSOL_examples_EIGEN_SPARSE})
+    foreach(example_tuple ${KINSOL_examples_EIGENSPARSE})
 
         # parse the example tuple
         list(GET example_tuple 0 example)
@@ -333,8 +334,8 @@ if(BUILD_SUNLINSOL_EIGEN_SPARSE)
                 EXAMPLE_TYPE ${example_type})
 
         # libraries to link against
-        target_link_libraries(${example} ${SUNDIALS_LIBS} ${SUNLINSOL_EIGEN_SPARSE_LIBS})
-        target_link_directories(${example} PUBLIC ${EIGEN_SPARSE_LIBRARY_DIR})
+        target_link_libraries(${example} ${SUNDIALS_LIBS} ${SUNLINSOL_EIGENSPARSE_LIBS})
+        target_link_directories(${example} PUBLIC ${EIGENSPARSE_LIBRARY_DIR})
 
         # install example source and out files
         if(EXAMPLES_INSTALL)
@@ -342,7 +343,7 @@ if(BUILD_SUNLINSOL_EIGEN_SPARSE)
                     DESTINATION ${EXAMPLES_INSTALL_PATH}/kinsol/serial)
         endif()
 
-    endforeach(example_tuple ${KINSOL_examples_EIGEN_SPARSE})
+    endforeach(example_tuple ${KINSOL_examples_EIGENSPARSE})
 
 endif()
 
@@ -392,10 +393,10 @@ if(EXAMPLES_INSTALL)
   else()
     set(EXAMPLES_SLU_SERIAL "")
   endif()
-  if(BUILD_SUNLINSOL_EIGEN_SPARSE)
-      examples2string(KINSOL_examples_EIGEN_SPARSE EXAMPLES_EIGEN_SPARSE)
+  if(BUILD_SUNLINSOL_EIGENSPARSE)
+      examples2string(KINSOL_examples_EIGENSPARSE EXAMPLES_EIGENSPARSE)
   else()
-      set(EXAMPLES_EIGEN_SPARSE "")
+      set(EXAMPLES_EIGENSPARSE "")
   endif()
 
   # Regardless of the platform we're on, we will generate and install

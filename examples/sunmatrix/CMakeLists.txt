@@ -58,3 +58,7 @@ endif()
 if(BUILD_SUNMATRIX_SLUNRLOC)
   add_subdirectory(slunrloc)
 endif()
+
+if(BUILD_SUNMATRIX_EIGENSPARSE)
+  add_subdirectory(eigensparse)
+endif()
